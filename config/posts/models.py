@@ -36,6 +36,7 @@ class LostFoundPost(BasePost):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN)
     location = models.CharField(max_length=200)
     event_date = models.DateField()
+    image = models.ImageField(upload_to="lostfound/%Y/%m/", blank=True)
 
 
 class MarketItem(BasePost):

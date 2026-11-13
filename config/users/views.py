@@ -12,8 +12,8 @@ RESEND_COOLDOWN = 60  # seconds
 
 
 def register(request):
-    # if request.user.is_authenticated:
-    #     return redirect("home")
+    if request.user.is_authenticated:
+        return redirect("home")
 
     form = EmailForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -63,3 +63,7 @@ def verify_email(request):
             return redirect("home")
 
     return render(request, "verify.html", {"form": form, "email": email})
+
+def home(request):
+    return render(request, "home.html")
+

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Lost &amp; Found{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/lost_found/lostfound.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Lost &amp; Found</h1>
+      <p>Lost something on campus, or found something that isn't yours?</p>
+    </div>
+    <a class="btn" href="{% url 'posts:lostfound_create' %}">New post</a>
+  </div>
+
+  <form class="filters" method="get">
+    {{ filter_form.q.label_tag }}{{ filter_form.q }}
+    {{ filter_form.kind.label_tag }}{{ filter_form.kind }}
+    {{ filter_form.category.label_tag }}{{ filter_form.category }}
+    <button class="btn" type="submit">Filter</button>
+  </form>
+
+  {% if posts %}
+    <div class="grid">
+      {% for post in posts %}
+        <article class="card{% if post.status == 'resolved' %} is-resolved{% endif %}">
+          {% if post.image %}
+            <div class="card-media"><img src="{{ post.image.url }}" alt="{{ post.title }}" loading="lazy"></div>
+          {% else %}
+            <div class="card-media empty">No photo</div>
+          {% endif %}
+
+          <div class="card-body">
+            <div class="card-badges">
+              <span class="badge badge-{{ post.kind }}">{{ post.get_kind_display }}</span>
+              <span class="badge">{{ post.category.name }}</span>
+              {% if post.status == 'resolved' %}<span class="badge">Resolved</span>{% endif %}
+            </div>
+            <h2>{{ post.title }}</h2>
+            <p class="card-meta">{{ post.location }}, {{ post.event_date|date:"M j, Y" }}</p>
+            <p class="card-text">{{ post.description|truncatewords:25 }}</p>
+            <div class="card-foot">
+              {{ post.author.first_name|default:"A student" }}, {{ post.created_at|timesince }} ago
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav class="pagination" aria-label="Pages">
+        {% if page_obj.has_previous %}
+          <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="empty-state">
+      <h2>Nothing here yet</h2>
+      <p>No posts match your filters.</p>
+      <a class="btn" href="{% url 'posts:lostfound_create' %}">Create the first post</a>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Home{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-glow: #16233b;
+      --surface: rgba(24, 30, 42, 0.62);
+      --surface-hover: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #e8ecf3;
+      --muted: #8b95a7;
+      --accent: #7aa7ff;
+      --radius: 18px;
+      --radius-sm: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { height: 100%; }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 15% -10%, var(--bg-glow), transparent 70%),
+        radial-gradient(700px 400px at 100% 0%, #1b1a33, transparent 65%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+
+    a { color: var(--accent); }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px 16px 0;
+    }
+
+    .site-nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      backdrop-filter: blur(14px) saturate(140%);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .site-nav::-webkit-scrollbar { display: none; }
+
+    .site-nav a {
+      flex: 0 0 auto;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .site-nav a:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+    .site-nav a[aria-current="page"] {
+      background: rgba(122, 167, 255, 0.16);
+      color: var(--text);
+    }
+
+    /* ---------- Main ---------- */
+    .site-main {
+      flex: 1 0 auto;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+
+    .messages {
+      list-style: none;
+      margin: 0 0 20px;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .messages li {
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+      flex-shrink: 0;
+      padding: 0 16px 16px;
+    }
+    .site-footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 24px;
+      color: var(--muted);
+      font-size: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      backdrop-filter: blur(14px) saturate(140%);
+    }
+
+    /* ---------- Accessibility ---------- */
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+
+    @media (max-width: 520px) {
+      .site-nav a { padding: 9px 14px; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Main">
+      <a href="{% url 'users:home' %}">Home</a>
+      <a href="{% url 'posts:lostfound' %}">Lost&amp;Found</a>
+      <a href="#">Marketplace</a>
+      <a href="/profile/">Profile</a>
+    </nav>
+  </header>
+
+  <main class="site-main">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <span>&copy; {% now "Y" %} KBTrade</span>
+      <span>Made for KBTU students</span>
+    </div>
+  </footer>
+
+</body>
+</html>
