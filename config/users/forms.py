@@ -37,3 +37,15 @@ class VerifyForm(forms.Form):
                 except ValidationError as e:
                     self.add_error("password1", e)
         return cleaned
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "avatar"]
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar")
+        if avatar and avatar.size > 5 * 1024 * 1024:
+            raise forms.ValidationError("The image must be smaller than 5 MB.")
+        return avatar

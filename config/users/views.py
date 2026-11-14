@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from .forms import EmailForm, VerifyForm
+from .forms import EmailForm, ProfileForm, VerifyForm
 from .models import EmailVerification
 
 User = get_user_model()
@@ -13,7 +15,7 @@ RESEND_COOLDOWN = 60  # seconds
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("users:home")
 
     form = EmailForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -31,7 +33,7 @@ def register(request):
                 recipient_list=[email],
             )
             request.session["reg_email"] = email
-            return redirect("verify_email")
+            return redirect("users:verify_email")
 
     return render(request, "register.html", {"form": form})
 
@@ -39,7 +41,7 @@ def register(request):
 def verify_email(request):
     email = request.session.get("reg_email")
     if not email:
-        return redirect("register")
+        return redirect("users:register")
 
     form = VerifyForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -60,10 +62,22 @@ def verify_email(request):
                 verification.delete()
             del request.session["reg_email"]
             login(request, user)
-            return redirect("home")
+            return redirect("users:home")
 
     return render(request, "verify.html", {"form": form, "email": email})
 
 def home(request):
-    return render(request, "home.html")
+    from posts.views import feed
+    return feed(request)
 
+
+
+@login_required
+def profile(request):
+    form = ProfileForm(request.POST if request.method == "POST" else None,
+                       request.FILES or None, instance=request.user)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Your profile has been updated.")
+        return redirect("users:profile")
+    return render(request, "profile.html", {"form": form, "account_tab": "profile"})

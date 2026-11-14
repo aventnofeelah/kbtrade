@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 class BasePost(models.Model):
     author = models.ForeignKey(
@@ -12,12 +13,21 @@ class BasePost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
+    def get_absolute_url(self):
+        return reverse("posts:detail", kwargs={"section": self.section, "pk": self.pk})
+
+    @property
+    def listing_kind(self):
+        return "sale" if self.section == "market" else self.kind
+
     class Meta:
         abstract = True
         ordering = ["-created_at"]
 
 
 class LostFoundPost(BasePost):
+    section = "lostfound"
+
     class Kind(models.TextChoices):
         LOST = "lost", "Lost"
         FOUND = "found", "Found"
@@ -40,6 +50,16 @@ class LostFoundPost(BasePost):
 
 
 class MarketItem(BasePost):
+    section = "market"
+
+    class Status(models.TextChoices):
+        ACTIVE = "active", "Available"
+        SOLD = "sold", "Sold"
+
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
+    image = models.ImageField(upload_to="market/%Y/%m/", blank=True)
+    location = models.CharField(max_length=200, blank=True)
+
     class Condition(models.TextChoices):
         NEW = "new", "New"
         USED = "used", "Used"

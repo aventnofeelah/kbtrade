@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}{% if item %}Edit listing{% else %}New listing{% endif %}{% endblock %}
+{% block content %}<div class="container page-spacing"><a class="back-link" href="{% url 'posts:feed' %}">← Back to campus</a><div class="form-page">{% include 'includes/listing_form.html' %}</div></div>{% endblock %}

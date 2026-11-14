@@ -1,182 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Home{% endblock %}</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #0d1117;
-      --bg-glow: #16233b;
-      --surface: rgba(24, 30, 42, 0.62);
-      --surface-hover: rgba(255, 255, 255, 0.07);
-      --border: rgba(255, 255, 255, 0.09);
-      --text: #e8ecf3;
-      --muted: #8b95a7;
-      --accent: #7aa7ff;
-      --radius: 18px;
-      --radius-sm: 12px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-
-    html { height: 100%; }
-
-    body {
-      min-height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      font-family: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      font-size: 16px;
-      line-height: 1.55;
-      color: var(--text);
-      background:
-        radial-gradient(900px 500px at 15% -10%, var(--bg-glow), transparent 70%),
-        radial-gradient(700px 400px at 100% 0%, #1b1a33, transparent 65%),
-        var(--bg);
-      background-attachment: fixed;
-    }
-
-    a { color: var(--accent); }
-
-    /* ---------- Header ---------- */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 14px 16px 0;
-    }
-
-    .site-nav {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      backdrop-filter: blur(14px) saturate(140%);
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .site-nav::-webkit-scrollbar { display: none; }
-
-    .site-nav a {
-      flex: 0 0 auto;
-      padding: 9px 18px;
-      border-radius: var(--radius-sm);
-      color: var(--muted);
-      font-weight: 500;
-      text-decoration: none;
-      transition: background-color 0.15s, color 0.15s;
-    }
-    .site-nav a:hover {
-      background: var(--surface-hover);
-      color: var(--text);
-    }
-    .site-nav a[aria-current="page"] {
-      background: rgba(122, 167, 255, 0.16);
-      color: var(--text);
-    }
-
-    /* ---------- Main ---------- */
-    .site-main {
-      flex: 1 0 auto;
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 16px;
-    }
-
-    .messages {
-      list-style: none;
-      margin: 0 0 20px;
-      padding: 0;
-      display: grid;
-      gap: 8px;
-    }
-    .messages li {
-      padding: 12px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-    }
-
-    /* ---------- Footer ---------- */
-    .site-footer {
-      flex-shrink: 0;
-      padding: 0 16px 16px;
-    }
-    .site-footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 8px 24px;
-      color: var(--muted);
-      font-size: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      backdrop-filter: blur(14px) saturate(140%);
-    }
-
-    /* ---------- Accessibility ---------- */
-    a:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; }
-    }
-
-    @media (max-width: 520px) {
-      .site-nav a { padding: 9px 14px; }
-    }
-  </style>
+  <meta name="theme-color" content="#ffbd30">
+  <title>{% block title %}Campus marketplace{% endblock %} · KBTrade</title>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script src="{% static 'js/site.js' %}" defer></script>
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-
+  <div class="utility"><div class="container"><span>Good finds. Familiar faces. <strong>Your campus, connected.</strong></span><span>KBTU community <span class="tiny-dot"></span> Almaty, KZ</span></div></div>
   <header class="site-header">
-    <nav class="site-nav" aria-label="Main">
-      <a href="{% url 'users:home' %}">Home</a>
-      <a href="{% url 'posts:lostfound' %}">Lost&amp;Found</a>
-      <a href="#">Marketplace</a>
-      <a href="/profile/">Profile</a>
-    </nav>
+    <div class="container header-main">
+      <a class="brand" href="{% url 'posts:feed' %}" aria-label="KBTrade home"><span class="brand-mark">k<span>↗</span></span><span>KBTrade<small>THE CAMPUS MARKETPLACE</small></span></a>
+      <form class="header-search" action="{% url 'posts:feed' %}" method="get"><span class="search-prefix">All listings</span><input name="q" value="{{ q }}" aria-label="Search campus listings" placeholder="What are you looking for?"><button aria-label="Search" type="submit">{% include 'includes/icon.html' with name='search' %}</button></form>
+      <a class="account-link" href="{% if user.is_authenticated %}{% url 'users:profile' %}{% else %}{% url 'users:login' %}{% endif %}">{% include 'includes/icon.html' with name='user' %}<span><small>{% if user.is_authenticated %}Hello, {{ user.first_name|default:'student' }}{% else %}Welcome to KBTrade{% endif %}</small><strong>My account</strong></span></a>
+      <a class="button button-yellow header-add" href="{% url 'posts:create' %}" {% if user.is_authenticated %}data-modal{% endif %}><span>＋</span> New listing</a>
+    </div>
+    <div class="nav-line"><nav class="container main-nav" aria-label="Main navigation"><a class="category-nav" href="{% url 'posts:feed' %}#categories">{% include 'includes/icon.html' with name='grid' %} Browse categories <span>⌄</span></a><a href="{% url 'posts:feed' %}" class="{% if not kind %}selected{% endif %}">Discover</a><a href="{% url 'posts:marketplace' %}" class="{% if kind == 'sale' %}selected{% endif %}">Marketplace</a><a href="{% url 'posts:lostfound' %}" class="{% if kind == 'lostfound' or kind == 'lost' or kind == 'found' %}selected{% endif %}">Lost &amp; Found</a><a href="{% url 'posts:my_listings' %}">My listings</a><span class="nav-community">{% include 'includes/icon.html' with name='shield' %} Exclusively for @kbtu.kz</span></nav></div>
   </header>
-
-  <main class="site-main">
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
+  <main id="main-content">
+    {% if messages %}<div class="container notices" role="status">{% for message in messages %}<div class="notice">{{ message }}</div>{% endfor %}</div>{% endif %}
     {% block content %}{% endblock %}
   </main>
-
-  <footer class="site-footer">
-    <div class="site-footer-inner">
-      <span>&copy; {% now "Y" %} KBTrade</span>
-      <span>Made for KBTU students</span>
-    </div>
-  </footer>
-
+  <footer class="site-footer"><div class="container footer-main"><a class="brand" href="{% url 'posts:feed' %}"><span class="brand-mark">k<span>↗</span></span><span>KBTrade<small>A LITTLE CLOSER TO YOUR COMMUNITY.</small></span></a><p>Buy, sell, and find your way back to what matters.<br>Made for students. Made for KBTU.</p><a href="{% url 'posts:create' %}" {% if user.is_authenticated %}data-modal{% endif %}>Share something with campus ↗</a></div><div class="container footer-bottom"><span>© {% now 'Y' %} KBTrade. A student community project.</span><span>Meet on campus. Trade with care.</span></div></footer>
+  <dialog id="listing-dialog" aria-labelledby="listing-form-title"><button type="button" class="dialog-close" aria-label="Close listing form">×</button><div id="dialog-content"></div></dialog>
 </body>
 </html>
