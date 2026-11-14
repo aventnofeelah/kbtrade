@@ -1,0 +1,16 @@
+<div class="listing-form-content">
+  <span class="eyebrow">A GOOD FIND STARTS HERE</span><h1 id="listing-form-title">{% if item %}Edit your listing{% else %}Share it with campus{% endif %}<span class="heading-dot">.</span></h1><p class="subtle">{% if item %}Keep the details up to date for your community.{% else %}Selling something, lost something, or found a little mystery?{% endif %}</p>
+  <form method="post" action="{{ form_action }}" enctype="multipart/form-data" class="listing-form" data-listing-form>
+    {% csrf_token %}{{ form.non_field_errors }}
+    <div class="field">{{ form.kind.label_tag }}{{ form.kind }}{{ form.kind.errors }}{% if item %}<small>Sale listings stay in Marketplace; lost and found listings can switch between Lost and Found.</small>{% endif %}</div>
+    <div class="upload-zone"><div class="upload-copy">{% include 'includes/icon.html' with name='photo' %}<strong>Add a photo of your item</strong><span>A clear photo makes all the difference. Up to 5 MB.</span></div><img class="photo-preview" {% if item.image %}src="{{ item.image.url }}"{% else %}hidden{% endif %} alt="Item photo preview">{{ form.image.label_tag }}{{ form.image }}{{ form.image.errors }}{% if item.image %}<label class="checkbox-row">{{ form.remove_image }} {{ form.remove_image.label }}</label>{% endif %}</div>
+    <div class="field">{{ form.title.label_tag }}{{ form.title }}{{ form.title.errors }}</div>
+    <div class="field">{{ form.category.label_tag }}{{ form.category }}{{ form.category.errors }}</div>
+    <div class="field">{{ form.description.label_tag }}{{ form.description }}{{ form.description.errors }}</div>
+    <div class="form-grid" data-sale-fields><div class="field">{{ form.price.label_tag }}{{ form.price }}{{ form.price.errors }}</div><div class="field">{{ form.condition.label_tag }}{{ form.condition }}{{ form.condition.errors }}</div></div>
+    <div class="form-grid"><div class="field">{{ form.location.label_tag }}{{ form.location }}{{ form.location.errors }}</div><div class="field" data-lost-fields>{{ form.event_date.label_tag }}{{ form.event_date }}{{ form.event_date.errors }}</div></div>
+    {% if item %}<div class="field">{{ form.status.label_tag }}{{ form.status }}{{ form.status.errors }}</div><label class="checkbox-row">{{ form.is_active }} {{ form.is_active.label }}</label>{% else %}<input type="hidden" name="is_active" value="on">{% endif %}
+    <div class="form-footer"><span>{% include 'includes/icon.html' with name='shield' %} Shared with your campus community</span><button class="button button-yellow" type="submit">{% if item %}Save changes{% else %}Publish listing{% endif %} ↗</button></div>
+  </form>
+  {{ category_options|json_script:'listing-categories' }}
+</div>
