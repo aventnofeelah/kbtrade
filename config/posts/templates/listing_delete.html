@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Delete listing{% endblock %}
+{% block content %}<div class="container page-spacing"><div class="auth-panel"><span class="eyebrow">MY LISTINGS</span><h1>Delete this listing?</h1><p>“{{ item.title }}” will be permanently removed. You can hide it instead by editing its visibility.</p><form method="post">{% csrf_token %}<div class="action-row"><a class="button button-outline" href="{% url 'posts:my_listings' %}">Keep listing</a><button class="button button-danger">Delete listing</button></div></form></div></div>{% endblock %}

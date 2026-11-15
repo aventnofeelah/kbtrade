@@ -1,14 +1,3 @@
-{% extends "base.html" %}
-
-{% block title %}Verification{% endblock %}
-
-{% block content %}
-    <h1>Verification</h1>
-    <p>Code sent to {{ email }}</p>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create account</button>
-    </form>
-    <!-- TODO: Send code again after some time  -->
-{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Verify your email{% endblock %}
+{% block content %}<div class="container page-spacing"><div class="auth-panel"><span class="eyebrow">ONE LAST STEP</span><h1>Make it official<span class="heading-dot">.</span></h1><p class="subtle">Enter the code sent to {{ email }}, then set up your profile.</p><form method="post" class="auth-form">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{{ field.errors }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}</div>{% endfor %}<button class="button button-yellow button-full">Create my account ↗</button></form><p class="auth-switch"><a href="{% url 'users:register' %}">Use another email or request a new code</a></p></div></div>{% endblock %}
