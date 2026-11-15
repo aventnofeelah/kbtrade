@@ -137,5 +137,3 @@ LOGIN_URL = "/login/"
 
 LOGIN_REDIRECT_URL = "users:home"
 LOGOUT_REDIRECT_URL = "users:home"
-# Compatibility with Django versions using the EMAIL_BACKEND setting.
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
